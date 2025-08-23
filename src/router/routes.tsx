@@ -1,0 +1,73 @@
+import { Route, Routes, Navigate } from 'react-router-dom'
+import MainLayout from '../layouts/MainLayout'
+import Home from '../pages/Landing/Home'
+import About from '../pages/Landing/About'
+import Features from '../pages/Landing/Features'
+import Contact from '../pages/Landing/Contact'
+import FAQ from '../pages/Landing/FAQ'
+import Login from '../pages/Auth/Login'
+import Register from '../pages/Auth/Register'
+import ProtectedRoute from '../components/ProtectedRoute'
+import RoleGuard from '../components/RoleGuard'
+import { UserRole } from '../utils/types'
+import RiderDashboard from '../pages/Rider/RiderDashboard'
+import RequestRide from '../pages/Rider/RequestRide'
+import RideHistory from '../pages/Rider/RideHistory'
+import RiderProfile from '../pages/Rider/Profile'
+import DriverDashboard from '../pages/Driver/DriverDashboard'
+import IncomingRequests from '../pages/Driver/IncomingRequests'
+import ActiveRide from '../pages/Driver/ActiveRide'
+import Earnings from '../pages/Driver/Earnings'
+import DriverProfile from '../pages/Driver/Profile'
+import AdminDashboard from '../pages/Admin/AdminDashboard'
+import Users from '../pages/Admin/Users'
+import Rides from '../pages/Admin/Rides'
+import Analytics from '../pages/Admin/Analytics'
+import AccountStatus from '../pages/Status/AccountStatus'
+
+export default function RoutesConfig() {
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="features" element={<Features />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="faq" element={<FAQ />} />
+        <Route path="status" element={<AccountStatus />} />
+
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+
+        {/* Rider */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<RoleGuard allow={[UserRole.RIDER]} />}>
+            <Route path="rider" element={<RiderDashboard />} />
+            <Route path="rider/request" element={<RequestRide />} />
+            <Route path="rider/history" element={<RideHistory />} />
+            <Route path="rider/profile" element={<RiderProfile />} />
+          </Route>
+
+          {/* Driver */}
+          <Route element={<RoleGuard allow={[UserRole.DRIVER]} />}>
+            <Route path="driver" element={<DriverDashboard />} />
+            <Route path="driver/incoming" element={<IncomingRequests />} />
+            <Route path="driver/active" element={<ActiveRide />} />
+            <Route path="driver/earnings" element={<Earnings />} />
+            <Route path="driver/profile" element={<DriverProfile />} />
+          </Route>
+
+          {/* Admin */}
+          <Route element={<RoleGuard allow={[UserRole.ADMIN]} />}>
+            <Route path="admin" element={<AdminDashboard />} />
+            <Route path="admin/users" element={<Users />} />
+            <Route path="admin/rides" element={<Rides />} />
+            <Route path="admin/analytics" element={<Analytics />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
+  )
+}

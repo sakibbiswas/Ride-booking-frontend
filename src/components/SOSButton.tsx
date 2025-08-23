@@ -1,0 +1,45 @@
+import { useEffect, useState } from 'react'
+
+export default function SOSButton({ phone = '999', contactWhatsApp = '', visible = false }: {
+  phone?: string; contactWhatsApp?: string; visible?: boolean
+}) {
+  const [coords, setCoords] = useState<{lat:number; lng:number} | null>(null)
+
+  useEffect(() => {
+    if (!visible) return
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => setCoords(null),
+        { enableHighAccuracy: true, timeout: 5000 }
+      )
+    }
+  }, [visible])
+
+  if (!visible) return null
+  const loc = coords ? `https://maps.google.com/?q=${coords.lat},${coords.lng}` : ''
+
+  return (
+    <div className="fixed bottom-6 right-6 flex flex-col gap-2">
+      <a href={`tel:${phone}`} className="px-4 py-3 rounded-full shadow bg-red-600 text-white font-semibold">Call Police</a>
+      {contactWhatsApp && (
+        <a
+          href={`https://wa.me/${contactWhatsApp}?text=${encodeURIComponent('Emergency! Here is my live location: ' + loc)}`}
+          target="_blank"
+          className="px-4 py-3 rounded-full shadow bg-orange-500 text-white font-semibold"
+        >
+          Notify Contact
+        </a>
+      )}
+      {loc && (
+        <a
+          href={loc}
+          target="_blank"
+          className="px-4 py-3 rounded-full shadow bg-gray-900 text-white font-semibold"
+        >
+          View My Location
+        </a>
+      )}
+    </div>
+  )
+}
