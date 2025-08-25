@@ -1,26 +1,53 @@
-import { useGetAllUsersQuery } from '../../api/userApi'
-import { useApproveDriverMutation, useSuspendDriverMutation } from '../../api/adminApi'
+
+
 import Loader from '../../components/Loader'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
+import { useGetAllUsersQuery, type User } from '../../api/userApi'
+import {
+  useApproveDriverMutation,
+  useSuspendDriverMutation,
+  useBlockDriverMutation,
+} from '../../api/adminApi'
 
 export default function Users() {
   const { data, isLoading, refetch } = useGetAllUsersQuery()
   const [approve] = useApproveDriverMutation()
   const [suspend] = useSuspendDriverMutation()
+  const [blockDriver] = useBlockDriverMutation()
 
   if (isLoading) return <Loader />
-  const users = data?.data || data || []
 
-  const onApprove = async (id: string) => { 
-    await approve(id).unwrap()
-    toast.success('Approved ✅')
-    refetch()
+  const users: User[] = data?.data ?? []
+
+  const onApprove = async (id: string) => {
+    try {
+      await approve(id).unwrap()
+      toast.success('Approved ✅')
+      refetch()
+    } catch {
+      toast.error('Failed to approve ❌')
+    }
   }
-  const onSuspend = async (id: string) => { 
-    await suspend(id).unwrap()
-    toast.success('Suspended ⚠️')
-    refetch()
+
+  const onSuspend = async (id: string) => {
+    try {
+      await suspend(id).unwrap()
+      toast.success('Suspended ⚠️')
+      refetch()
+    } catch {
+      toast.error('Failed to suspend ❌')
+    }
+  }
+
+  const onBlock = async (id: string) => {
+    try {
+      await blockDriver(id).unwrap()
+      toast.success('Blocked 🚫')
+      refetch()
+    } catch {
+      toast.error('Failed to block ❌')
+    }
   }
 
   return (
@@ -41,9 +68,9 @@ export default function Users() {
               </tr>
             </thead>
             <tbody>
-              {users.map((u:any)=>(
-                <motion.tr 
-                  key={u._id} 
+              {users.map((u) => (
+                <motion.tr
+                  key={u._id}
                   whileHover={{ scale: 1.02, boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}
                   className="transition-transform even:bg-indigo-50"
                 >
@@ -51,33 +78,47 @@ export default function Users() {
                   <td className="p-3 border-b">{u.email}</td>
                   <td className="p-3 border-b capitalize">{u.role}</td>
                   <td className="p-3 border-b">
-                    <span className={`px-2 py-1 rounded-full font-medium text-sm ${
-                      u.isApproved ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full font-medium text-sm ${
+                        u.isApproved ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
+                      }`}
+                    >
                       {u.isApproved ? 'Yes ✅' : 'No ❌'}
                     </span>
                   </td>
                   <td className="p-3 border-b">
-                    <span className={`px-2 py-1 rounded-full font-medium text-sm ${
-                      u.isBlocked ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full font-medium text-sm ${
+                        u.isBlocked ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'
+                      }`}
+                    >
                       {u.isBlocked ? 'Yes ❌' : 'No ✅'}
                     </span>
                   </td>
+
+                  {/* Actions Column: always show all buttons */}
                   <td className="p-3 border-b">
                     {u.role === 'driver' && (
-                      <div className="flex gap-2">
-                        <button 
-                          onClick={()=>onApprove(u._id)} 
+                      <div className="flex gap-2 flex-wrap">
+                        <button
+                          onClick={() => onApprove(u._id)}
                           className="px-3 py-1 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold shadow"
                         >
                           Approve
                         </button>
-                        <button 
-                          onClick={()=>onSuspend(u._id)} 
-                          className="px-3 py-1 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold shadow"
+
+                        <button
+                          onClick={() => onSuspend(u._id)}
+                          className="px-3 py-1 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-white font-semibold shadow"
                         >
                           Suspend
+                        </button>
+
+                        <button
+                          onClick={() => onBlock(u._id)}
+                          className="px-3 py-1 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold shadow"
+                        >
+                          Block
                         </button>
                       </div>
                     )}

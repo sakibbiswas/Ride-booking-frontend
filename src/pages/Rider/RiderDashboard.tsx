@@ -1,9 +1,9 @@
 
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import SOSButton from '../../components/SOSButton';
-import { motion } from 'framer-motion';
 
 export default function RiderDashboard() {
   const { user, token } = useAppSelector((s) => s.auth);
@@ -11,19 +11,28 @@ export default function RiderDashboard() {
 
   useEffect(() => {
     const fetchOnlineDrivers = async () => {
+      if (!token) return;
+
       try {
-        const res = await fetch('/api/v1/admin/online-drivers', {
+        const res = await fetch('http://localhost:5000/api/v1/rides/online-drivers', { 
           headers: {
-            Authorization: token ? `Bearer ${token}` : '',
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-        const body = await res.json();
-        setOnlineDrivers(body.success ? body.onlineDrivers ?? 0 : 0);
+
+        if (!res.ok) {
+          setOnlineDrivers(0);
+          return;
+        }
+
+        const data = await res.json();
+        setOnlineDrivers(data.success ? data.onlineDrivers ?? 0 : 0);
       } catch {
         setOnlineDrivers(0);
       }
     };
+
     fetchOnlineDrivers();
   }, [token]);
 
@@ -87,17 +96,6 @@ export default function RiderDashboard() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

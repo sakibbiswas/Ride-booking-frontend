@@ -7,3 +7,20 @@ export default function ProtectedRoute() {
   if (user.isBlocked) return <Navigate to="/status" replace />
   return <Outlet />
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.12",
     "axios": "^1.11.0",
+    "dayjs": "^1.11.13",
     "framer-motion": "^12.23.12",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.541.0",

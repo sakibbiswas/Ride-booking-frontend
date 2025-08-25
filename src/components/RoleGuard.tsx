@@ -11,3 +11,17 @@ export default function RoleGuard({ allow }: { allow: UserRole[] }) {
   }
   return <Outlet />
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

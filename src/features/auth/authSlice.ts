@@ -1,4 +1,5 @@
 
+// src/features/auth/authSlice.ts
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { UserRole } from '../../utils/types'
@@ -18,7 +19,6 @@ type AuthState = {
   user: AuthUser | null
 }
 
-//  safe JSON parser
 const loadUser = (): AuthUser | null => {
   try {
     const raw = localStorage.getItem('user')

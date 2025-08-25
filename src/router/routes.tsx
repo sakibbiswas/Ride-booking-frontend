@@ -1,3 +1,4 @@
+
 import { Route, Routes, Navigate } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
 import Home from '../pages/Landing/Home'
@@ -24,6 +25,7 @@ import Users from '../pages/Admin/Users'
 import Rides from '../pages/Admin/Rides'
 import Analytics from '../pages/Admin/Analytics'
 import AccountStatus from '../pages/Status/AccountStatus'
+import SettingsPage from '../pages/settings/SettingsPage'
 
 export default function RoutesConfig() {
   return (
@@ -35,37 +37,38 @@ export default function RoutesConfig() {
         <Route path="contact" element={<Contact />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="status" element={<AccountStatus />} />
-
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-
-        {/* Rider */}
+       
         <Route element={<ProtectedRoute />}>
           <Route element={<RoleGuard allow={[UserRole.RIDER]} />}>
             <Route path="rider" element={<RiderDashboard />} />
             <Route path="rider/request" element={<RequestRide />} />
             <Route path="rider/history" element={<RideHistory />} />
             <Route path="rider/profile" element={<RiderProfile />} />
+            <Route path="rider/settings" element={<SettingsPage />} />
           </Route>
 
-          {/* Driver */}
           <Route element={<RoleGuard allow={[UserRole.DRIVER]} />}>
             <Route path="driver" element={<DriverDashboard />} />
             <Route path="driver/incoming" element={<IncomingRequests />} />
             <Route path="driver/active" element={<ActiveRide />} />
             <Route path="driver/earnings" element={<Earnings />} />
             <Route path="driver/profile" element={<DriverProfile />} />
+            <Route path="driver/settings" element={<SettingsPage />} />
           </Route>
 
-          {/* Admin */}
           <Route element={<RoleGuard allow={[UserRole.ADMIN]} />}>
             <Route path="admin" element={<AdminDashboard />} />
             <Route path="admin/users" element={<Users />} />
             <Route path="admin/rides" element={<Rides />} />
             <Route path="admin/analytics" element={<Analytics />} />
+            <Route path="admin/settings" element={<SettingsPage />} />
           </Route>
         </Route>
 
+
+       
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

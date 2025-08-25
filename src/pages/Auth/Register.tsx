@@ -4,11 +4,13 @@ import { UserRole } from '../../utils/types';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Register() {
   const [form, setForm] = useState<{name:string; email:string; password:string; role:UserRole}>({
     name:'', email:'', password:'', role: UserRole.RIDER
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [register, { isLoading }] = useRegisterMutation();
   const navigate = useNavigate();
 
@@ -64,13 +66,25 @@ export default function Register() {
             onChange={e => setForm({...form, email:e.target.value})}
             className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 transition"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={e => setForm({...form, password:e.target.value})}
-            className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 transition"
-          />
+          
+          {/* Password with toggle */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={form.password}
+              onChange={e => setForm({...form, password:e.target.value})}
+              className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 transition"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-4 flex items-center text-gray-500 hover:text-indigo-600"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
+
           <select
             value={form.role}
             onChange={e => setForm({...form, role: e.target.value as UserRole})}

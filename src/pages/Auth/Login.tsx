@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useLoginMutation, useMeQuery } from '../../api/authApi';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -6,9 +7,11 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { UserRole } from '../../utils/types';
 import { motion } from 'framer-motion';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -66,7 +69,7 @@ export default function Login() {
         </p>
 
         {/* Form */}
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
@@ -74,14 +77,25 @@ export default function Login() {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 transition"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 transition"
-          />
 
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 transition pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-indigo-600"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
+
+       
           <button
             type="submit"
             disabled={isLoading}

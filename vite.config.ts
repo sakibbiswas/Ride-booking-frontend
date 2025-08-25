@@ -17,6 +17,14 @@ export default defineConfig({
   ],
   build: {
     outDir: 'dist' // ✅ Vercel expects dist folder
-  }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000', // তোমার backend port
+        changeOrigin: true,
+      },
+    },
+  },
 
 })
