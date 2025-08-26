@@ -1,69 +1,81 @@
-# React + TypeScript + Vite
+# 🚖 Ride Management System – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A **production-ready, responsive, and role-based Ride Booking Platform** built with **React, Redux Toolkit, and RTK Query**. This app provides distinct experiences for **Riders**, **Drivers**, and **Admins** with secure JWT authentication and modern UI/UX.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔗 Live Deployment
 
-## Expanding the ESLint configuration
+- **Frontend**: https://ride-frontend-one.vercel.app  
+- **Backend**: https://ride-booking-nine.vercel.app
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📖 Project Overview
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The Ride Management System is a **full-stack Uber/Pathao-style platform** where Riders can book rides, Drivers can manage requests and earnings, and Admins can oversee the system.  
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This repo contains the **Frontend (React + TypeScript)** code. The backend (Node/Express + MongoDB) is in a separate repository.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## ✨ Features
+
+### Public
+- Landing page with 5+ sections (Hero, How It Works, Highlights, Testimonials, Promotions).
+- About Us, Features, Contact (validated form), FAQ (searchable).
+
+### Authentication & Authorization
+- JWT login/register with role selection (**Rider**, **Driver**, **Admin**).
+- Persistent authentication & logout.
+- Blocked/Suspended users redirected to status page.
+- Driver “Offline Mode” → dashboard access but no ride requests.
+
+### Rider
+- Request rides (pickup, destination, fare estimate, payment).
+- Ride history with filters/search.
+- Ride details page with driver info and timeline.
+- Profile update (name, phone, password).
+
+### Driver
+- Availability toggle (Online/Offline).
+- Manage ride requests (Accept/Reject).
+- Active ride management (Accepted → Completed).
+- Earnings dashboard (charts).
+- Ride history & profile management.
+
+### Admin
+- Manage users (block/unblock, approve/suspend drivers).
+- Ride oversight with advanced filtering.
+- Analytics dashboard (charts for rides, revenue, activity).
+- Profile management.
+
+### General UX
+- Responsive UI with Tailwind CSS.
+- Role-based navbar + profile dropdown.
+- Loading skeletons, toasts, global error handling.
+- SOS button (active rides only) to notify contacts or share location.
+
+---
+
+## 🧰 Technology Stack
+
+- **Framework**: React 18 + TypeScript  
+- **State Management**: Redux Toolkit + RTK Query  
+- **Routing**: React Router 6  
+- **Styling**: Tailwind CSS  
+- **Charts**: Recharts  
+- **Notifications**: react-hot-toast  
+- **Maps**: Leaflet / react-leaflet (optional)  
+- **Validation**: React Hook Form + Zod  
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone Repos
+```bash
+git clone https://github.com/sakibbiswas/Ride-booking-frontend
+cd ride-frontend
