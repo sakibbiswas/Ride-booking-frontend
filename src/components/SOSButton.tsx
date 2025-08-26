@@ -1,7 +1,6 @@
-
 import { useEffect, useState } from 'react'
 
-export default function SOSButton({
+function SOSButton({
   phone = '999',
   contactWhatsApp = '',
   visible = false,
@@ -16,11 +15,7 @@ export default function SOSButton({
     if (!visible) return
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (pos) =>
-          setCoords({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          }),
+        (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
         () => setCoords(null),
         { enableHighAccuracy: true, timeout: 5000 }
       )
@@ -29,10 +24,7 @@ export default function SOSButton({
 
   if (!visible) return null
 
-  // Generate Google Maps link if coords are available
   const locLink = coords ? `https://maps.google.com/?q=${coords.lat},${coords.lng}` : ''
-
-  // WhatsApp message
   const whatsappMessage = coords
     ? `Emergency! Here is my live location: ${locLink}`
     : `Emergency! I need help!`
@@ -68,3 +60,5 @@ export default function SOSButton({
     </div>
   )
 }
+
+export default SOSButton

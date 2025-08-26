@@ -1,9 +1,8 @@
-
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import SOSButton from '../../components/SOSButton';
+import SOSButton from '../../components/SOSButton'; 
 import { API_BASE_URL } from '../../utils/constants';
 
 export default function RiderDashboard() {
@@ -59,7 +58,6 @@ export default function RiderDashboard() {
           What would you like to do today?
         </p>
 
-        {/* Online Drivers Card */}
         <motion.div
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
@@ -74,7 +72,6 @@ export default function RiderDashboard() {
           </p>
         </motion.div>
 
-        {/* Rider Options */}
         <div className="grid md:grid-cols-3 gap-6 mb-6">
           {options.map((opt) => (
             <motion.div key={opt.to} whileHover={{ scale: 1.05 }}>
@@ -88,7 +85,6 @@ export default function RiderDashboard() {
           ))}
         </div>
 
-        {/* SOS Button */}
         <SOSButton
           phone="999"
           contactWhatsApp="8801631479509"
