@@ -1,5 +1,4 @@
-
-// src/utils/types.ts
+//utils/types.ts
 
 // User roles
 export const UserRole = {
