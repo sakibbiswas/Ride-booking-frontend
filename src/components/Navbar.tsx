@@ -23,7 +23,7 @@ export default function Navbar() {
     { to: "/faq", label: "FAQ" },
   ];
 
-  // ✅ Dashboard route by role
+  //  Dashboard route by role
   const dashboardRoute = () => {
     if (!user) return "/";
     if (user.role === UserRole.RIDER) return "/rider";
@@ -31,7 +31,7 @@ export default function Navbar() {
     return "/admin";
   };
 
-  // ✅ Settings route by role
+  //  Settings route by role
   const settingsRoute = () => {
     if (!user) return "/";
     if (user.role === UserRole.RIDER) return "/rider/settings";

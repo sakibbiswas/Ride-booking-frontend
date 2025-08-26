@@ -1,4 +1,5 @@
-import { useState } from 'react'
+
+import { useState, useMemo } from 'react'
 import { useMyRidesQuery, useCancelRideMutation, useDriverUpdateRideStatusMutation } from '../../api/rideApi'
 import Loader from '../../components/Loader'
 import toast from 'react-hot-toast'
@@ -15,6 +16,15 @@ const statusColors: Record<RideStatus, string> = {
   CANCELLED: 'bg-red-100 text-red-800',
 }
 
+const statusFilters: (RideStatus | 'ALL')[] = [
+  'ALL',
+  'REQUESTED',
+  'ACCEPTED',
+  'PICKED_UP',
+  'COMPLETED',
+  'CANCELLED',
+]
+
 export default function RideHistory() {
   const { data, isLoading, refetch } = useMyRidesQuery()
   const [cancelRide] = useCancelRideMutation()
@@ -22,8 +32,23 @@ export default function RideHistory() {
   const [updating, setUpdating] = useState<string | null>(null)
   const userRole = useSelector((state: any) => state.auth.user?.role)
 
+  // filters & pagination state
+  const [filter, setFilter] = useState<'ALL' | RideStatus>('ALL')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
+
   if (isLoading) return <Loader />
   const rides: Ride[] = data?.data || []
+
+  // Apply filter
+  const filteredRides = useMemo(() => {
+    if (filter === 'ALL') return rides
+    return rides.filter((r) => r.status === filter)
+  }, [rides, filter])
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredRides.length / pageSize)
+  const paginatedRides = filteredRides.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 
   const onCancel = async (id: string) => {
     try {
@@ -51,8 +76,49 @@ export default function RideHistory() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-yellow-50 px-4 py-10">
       <h1 className="text-3xl font-extrabold mb-8 text-center text-indigo-700">My Rides</h1>
+
+      {/* Filter + Page size */}
+      <div className="flex flex-wrap items-center justify-between gap-4 max-w-5xl mx-auto mb-6">
+        <div className="flex gap-2 flex-wrap">
+          {statusFilters.map((s) => (
+            <button
+              key={s}
+              onClick={() => {
+                setFilter(s)
+                setCurrentPage(1)
+              }}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition transform hover:scale-105 shadow-sm ${
+                filter === s
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50'
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+
+        <div>
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value))
+              setCurrentPage(1)
+            }}
+            className="px-3 py-2 rounded-xl border border-indigo-200 text-sm focus:ring-2 focus:ring-indigo-400"
+          >
+            {[5, 10, 20].map((size) => (
+              <option key={size} value={size}>
+                {size} / page
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Ride cards */}
       <div className="grid gap-6 max-w-5xl mx-auto">
-        {rides.map((r) => (
+        {paginatedRides.map((r) => (
           <motion.div
             key={r._id}
             initial={{ opacity: 0, y: 20 }}
@@ -128,13 +194,33 @@ export default function RideHistory() {
           </motion.div>
         ))}
       </div>
+
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-8">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 rounded-xl bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+
+          <span className="text-sm font-medium text-gray-600">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 rounded-xl bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   )
 }
-
-
-
-
-
 
 

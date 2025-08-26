@@ -42,7 +42,7 @@ export default function AdminProfile() {
           loading={changing}
           onChange={async (p) => {
             try {
-              // ✅ Correct payload for RTK Query
+              // payload for RTK Query
               await changePass({
                 currentPassword: p.currentPassword,
                 newPassword: p.newPassword,
@@ -57,3 +57,18 @@ export default function AdminProfile() {
     </div>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

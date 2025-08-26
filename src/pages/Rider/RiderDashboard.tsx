@@ -4,6 +4,7 @@ import { useAppSelector } from '../../app/hooks';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import SOSButton from '../../components/SOSButton';
+import { API_BASE_URL } from '../../utils/constants';
 
 export default function RiderDashboard() {
   const { user, token } = useAppSelector((s) => s.auth);
@@ -14,7 +15,7 @@ export default function RiderDashboard() {
       if (!token) return;
 
       try {
-        const res = await fetch('http://localhost:5000/api/v1/rides/online-drivers', { 
+        const res = await fetch(`${API_BASE_URL}/rides/online-drivers`, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -28,7 +29,8 @@ export default function RiderDashboard() {
 
         const data = await res.json();
         setOnlineDrivers(data.success ? data.onlineDrivers ?? 0 : 0);
-      } catch {
+      } catch (err) {
+        console.error(err);
         setOnlineDrivers(0);
       }
     };
@@ -96,7 +98,3 @@ export default function RiderDashboard() {
     </div>
   );
 }
-
-
-
-

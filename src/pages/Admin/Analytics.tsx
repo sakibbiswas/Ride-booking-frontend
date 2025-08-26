@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import {
   LineChart,
@@ -16,6 +17,7 @@ import {
 } from 'recharts';
 import Loader from '../../components/Loader';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../../utils/constants';
 
 type RideVol = { date: string; rides: number };
 type Rev = { date: string; revenue: number };
@@ -40,12 +42,15 @@ export default function Analytics() {
       setError(null);
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/v1/admin/analytics', {
+        if (!token) throw new Error('No auth token found');
+
+        const res = await fetch(`${API_BASE_URL}/admin/analytics`, {
           headers: {
-            Authorization: token ? `Bearer ${token}` : '',
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
+
         const text = await res.text();
         let body;
         try {
@@ -53,7 +58,9 @@ export default function Analytics() {
         } catch {
           throw new Error('Invalid JSON response: ' + text.slice(0, 200));
         }
+
         if (!res.ok) throw new Error(body?.message || `HTTP ${res.status}`);
+
         const d = body.data;
         setRideVolume(d.rideVolume || []);
         setRevenue(d.revenue || []);
