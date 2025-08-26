@@ -1,4 +1,3 @@
-
 // src/api/rideApi.ts
 import { baseApi } from './baseApi'
 import type { Ride, RideStatus } from '../utils/types'
